@@ -9,13 +9,24 @@ import ModalNewTransaction from "../components/Button/ModalNewTransaction/ModalN
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import Header from "../components/Button/Header/Header";
+import AlertDelete from "../components/Button/AlertDelete/AlertDelete";
+
 
 function TransactionsPage() {
   const [open, setOpen] = useState(false);
-  let navigate = useNavigate();
+  const [openDelete, setOpenDelete] = useState(false);
+  const [index, setIndex] = useState(null);
 
+  let navigate = useNavigate();
+  
   function handleModal() {
     setOpen(true);
+  }
+
+  function handleDelete(id){
+    setOpenDelete(true)
+    setIndex(id)
   }
 
   const [allTransactions, setAllTransactions] = useState([]);
@@ -66,19 +77,7 @@ function TransactionsPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      <header className="w-full bg-pink-700 py-6 pb-32 px-4 md:px-10">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-white text-xl md:text-2xl font-bold">
-            digital money
-          </h1>
-          <button
-            onClick={handleModal}
-            className="bg-white/20 px-12 rounded py-2 hover:bg-white/30 text-white border-0"
-          >
-            Nova transação
-          </button>
-        </div>
-      </header>
+      <Header handleModal={handleModal}></Header>
       <main className="flex-1 container mx-auto px-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 -mt-24">
           <CardTransaction
@@ -125,7 +124,7 @@ function TransactionsPage() {
                     <td className="px-6 py-4">{transactions.date}</td>
                     <td className="px-6 py-4 flex flex-row gap-3">
                       <button
-                        onClick={() => deleteTransaction(transactions.id)}
+                        onClick={()=>{handleDelete(transactions.id)}} //() => deleteTransaction(transactions.id)
                         className="py-2 px-3 font-medium bg-red-100 text-red-600 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg"
                       >
                         Excluir
@@ -145,6 +144,7 @@ function TransactionsPage() {
         </div>
 
         <ModalNewTransaction open={open} setOpen={setOpen} />
+        <AlertDelete openDelete={openDelete} setOpenDelete={setOpenDelete} index={index}></AlertDelete>
       </main>
     </div>
   );

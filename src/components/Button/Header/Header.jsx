@@ -1,4 +1,4 @@
-export default function Header(){
+export default function Header({handleModal}){
     return (
       <header className="w-full bg-pink-700 py-6 pb-32 px-4 md:px-10">
         <div className="container mx-auto flex justify-between items-center">

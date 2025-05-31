@@ -4,7 +4,7 @@
       "id": "1",
       "title": "Netflix",
       "price": 55.9,
-      "transactionType": "withdraw",
+      "type": "withdraw",
       "category": "Entretenimento",
       "date": "17/05/2025"
     },
@@ -25,12 +25,12 @@
       "date": "17/05/2025"
     },
     {
-      "id": "274c",
-      "title": "Renda Extra",
+      "id": "35d5",
+      "title": "Cartão",
       "price": 1200,
-      "category": "A vista",
-      "transactionType": "deposit",
-      "date": "17/05/2025"
+      "category": " Mensal",
+      "transactionType": "withdraw",
+      "date": "31/05/2025"
     }
   ]
 }
