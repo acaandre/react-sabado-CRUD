@@ -1,0 +1,9 @@
+Para este projeto. Você deve abrir dois git bash
+
+Um você digita npm install react - Para instalar o React 
+
+Após isso, você deve rodar o: npm run dev
+
+
+https://www.npmjs.com/package/json-server
+E para conectar com o db.json, você deve rodar: npx json-server db.json

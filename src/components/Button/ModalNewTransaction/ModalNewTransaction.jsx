@@ -1,5 +1,5 @@
 "use client";
-
+import { format, formatDistance, subDays } from "date-fns";
 import { useState } from "react";
 import {
   Dialog,
@@ -10,18 +10,19 @@ import {
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { ArrowCircleDown, ArrowCircleUp } from "phosphor-react";
 import axios from "axios";
+import ButtonTypeTransaction from "../ButtonTypeTransaction/ButtonTypeTransaction";
 
-export default function ModalNewTransaction({open, setOpen}) {
-  const [title,setTitle] = useState("");
-  const [price,setPrice] = useState(0);
+export default function ModalNewTransaction({ open, setOpen }) {
+  const [title, setTitle] = useState("");
+  const [price, setPrice] = useState(0);
   const [category, setCategory] = useState("");
-  const [transactionType, setTransactionType] = useState("deposit");
+  const [transactionType, setTransactionType] = useState("");
 
   function handleClickTransactionType(type) {
-    setTransactionType(type)
+    setTransactionType(type);
   }
 
-  function handleChangeTitle(ev){
+  function handleChangeTitle(ev) {
     setTitle(ev);
   }
 
@@ -36,12 +37,12 @@ export default function ModalNewTransaction({open, setOpen}) {
   async function handleNewTransaction() {
     await axios.post("http://localhost:3000/transactions", {
       title,
-      price,
+      price: Number(price),
       category,
       transactionType,
-      date: "17/05/2025"
+      date: format(new Date(), "dd/MM/yyyy"),
     });
-   setOpen(false);
+    setOpen(false);
   }
 
   return (
@@ -82,30 +83,33 @@ export default function ModalNewTransaction({open, setOpen}) {
                       placeholder="Preço"
                     />
                     <div className="flex justify-between">
-                      <button
+                      <ButtonTypeTransaction
+                        type={transactionType}
+                        isActive={transactionType === "deposit"}
                         onClick={() => {
                           handleClickTransactionType("deposit");
                         }}
-                        className="px-4 py-2 cursor-pointer bg-gray-200 w-[49%] h-[50px] flex gap-4 items-center justify-center transition ease-in-out duration-150 hover:bg-gray-300"
                       >
                         <ArrowCircleUp
                           size={20}
                           className="text-emerald-500 font-bold"
                         />{" "}
                         Entrada
-                      </button>
-                      <button
+                      </ButtonTypeTransaction>
+
+                      <ButtonTypeTransaction
+                        type={transactionType}
+                        isActive={transactionType === "withdraw"}
                         onClick={() => {
                           handleClickTransactionType("withdraw");
                         }}
-                        className="px-4 py-2 cursor-pointer bg-gray-200 w-[49%] h-[50px] flex gap-4 items-center justify-center transition ease-in-out duration-150 hover:bg-gray-300"
                       >
                         <ArrowCircleDown
                           size={20}
                           className="text-red-500 font-bold"
                         />{" "}
                         Saida
-                      </button>
+                      </ButtonTypeTransaction>
                     </div>
                     <div className="w-full">
                       <input

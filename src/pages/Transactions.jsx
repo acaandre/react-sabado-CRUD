@@ -8,9 +8,11 @@ import CardTransaction from "../components/Button/CardTransaction/CardTransactio
 import ModalNewTransaction from "../components/Button/ModalNewTransaction/ModalNewTransaction";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 function TransactionsPage() {
   const [open, setOpen] = useState(false);
+  let navigate = useNavigate();
 
   function handleModal() {
     setOpen(true);
@@ -27,9 +29,36 @@ function TransactionsPage() {
   useEffect(() => {
     fetchTransactions();
   }, []);
+
+  async function editTransaction(index) {
+    navigate("/edit/" + index);
+  }
+
   //fetchTransactions();
 
+  // retorna a lista só das listas de deposit
+  // const depositResult = allTransactions.filter((item)=>{return item.transactiontype === "deposit"})
+
+  const depositResult = allTransactions.reduce((prev, current) => {
+    if (current.transactionType === "deposit") {
+      return prev + current.price;
+    }
+    return prev;
+  }, 0);
+
+  const withdrawResult = allTransactions.reduce((prev, current) => {
+    if (current.transactionType === "withdraw") {
+      return prev + current.price;
+    }
+    return prev;
+  }, 0);
+
+  let Result = depositResult - withdrawResult;
+
   console.log(allTransactions);
+
+  console.log(depositResult);
+  console.log(withdrawResult);
 
   async function deleteTransaction(index) {
     await axios.delete(`http://localhost:3000/transactions/${index}`);
@@ -55,16 +84,19 @@ function TransactionsPage() {
           <CardTransaction
             title="Entrada"
             background="bg-green-100"
+            valor={depositResult}
             icon={<ArrowCircleUp className="text-green-500" size={32} />}
           />
           <CardTransaction
             title="Saída"
             background="bg-red-100"
+            valor={withdrawResult}
             icon={<ArrowCircleDown className="text-red-500" size={32} />}
           />
           <CardTransaction
             title="Total"
             background="bg-green-900"
+            valor={Result}
             textColor="text-white"
             icon={<CurrencyDollar size={32} />}
           />
@@ -98,7 +130,10 @@ function TransactionsPage() {
                       >
                         Excluir
                       </button>
-                      <button className="py-2 px-3 font-medium bg-yellow-100 text-amber-900 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg">
+                      <button
+                        onClick={() => editTransaction(transactions.id)}
+                        className="py-2 px-3 font-medium bg-yellow-100 text-amber-900 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg"
+                      >
                         Editar
                       </button>
                     </td>

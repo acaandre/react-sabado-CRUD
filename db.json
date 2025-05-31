@@ -1,3 +1,36 @@
 {
-  "transactions": []
+  "transactions": [
+    {
+      "id": "1",
+      "title": "Netflix",
+      "price": 55.9,
+      "transactionType": "withdraw",
+      "category": "Entretenimento",
+      "date": "17/05/2025"
+    },
+    {
+      "id": "5cce",
+      "title": "Salario",
+      "price": 12000,
+      "category": "Salario",
+      "transactionType": "deposit",
+      "date": "17/05/2025"
+    },
+    {
+      "id": "fbea",
+      "title": "Prime Video",
+      "price": 20,
+      "category": "Entretenimento",
+      "transactionType": "withdraw",
+      "date": "17/05/2025"
+    },
+    {
+      "id": "274c",
+      "title": "Renda Extra",
+      "price": 1200,
+      "category": "A vista",
+      "transactionType": "deposit",
+      "date": "17/05/2025"
+    }
+  ]
 }

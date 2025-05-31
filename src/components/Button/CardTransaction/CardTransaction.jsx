@@ -3,6 +3,7 @@ function CardTransaction({
   background,
   textColor = "text-black",
   icon,
+  valor
 }) {
   return (
     <div
@@ -12,7 +13,7 @@ function CardTransaction({
         <span>{title}</span>
         {icon}
       </div>
-      <strong className="text-3xl font-medium mt-1">R$ 0,00</strong>
+      <strong className="text-3xl font-medium mt-1">R$ {valor} </strong>
     </div>
   );
 }
