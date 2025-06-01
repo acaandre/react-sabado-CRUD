@@ -1,19 +1,19 @@
 {
   "transactions": [
     {
-      "id": "1",
       "title": "Netflix",
-      "price": 55.9,
-      "type": "withdraw",
+      "price": 570.5,
       "category": "Entretenimento",
-      "date": "17/05/2025"
+      "transactionType": "deposit",
+      "date": "01/06/2025",
+      "id": "1"
     },
     {
       "title": "Salario",
-      "price": 12052,
+      "price": 12050,
       "category": "Salario",
       "transactionType": "deposit",
-      "date": "31/05/2025",
+      "date": "01/06/2025",
       "id": "5cce"
     },
     {

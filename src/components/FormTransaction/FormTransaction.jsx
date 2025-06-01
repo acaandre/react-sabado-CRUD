@@ -1,6 +1,7 @@
 import { DialogTitle } from "@headlessui/react";
 import ButtonTypeTransaction from "../Button/ButtonTypeTransaction/ButtonTypeTransaction";
 import { ArrowCircleDown, ArrowCircleUp } from "phosphor-react";
+import { useNavigate, useParams } from "react-router";
 
 export default function FormTransaction({
   handleChangeTitle,
@@ -13,6 +14,8 @@ export default function FormTransaction({
   priceValue = "",
   categoryValue = "",
 }) {
+  const navigate = useNavigate();
+
   function handleSubmit(e) {
     e.preventDefault();
     handleNewTransaction();
@@ -81,13 +84,21 @@ export default function FormTransaction({
           </div>
 
           {/* ✅ Botão de envio */}
-          <div className="mt-6 flex justify-end">
+          <div className="mt-6 flex justify-end gap-3">
+          <button
+              type="reset"
+              onClick={()=>{navigate("/transactions")}}
+              className=" bg-pink-400 hover:bg-pink-500 text-white font-semibold px-6 py-2 rounded-md transition duration-200"
+            >
+              Voltar
+            </button>
             <button
               type="submit"
               className=" bg-pink-600 hover:bg-pink-800 text-white font-semibold px-6 py-2 rounded-md transition duration-200"
             >
               Editar
             </button>
+            
           </div>
         </div>
       </div>
