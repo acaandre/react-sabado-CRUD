@@ -1,52 +1,69 @@
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router-dom";
 import Header from "../components/Button/Header/Header";
 import FormTransaction from "../components/FormTransaction/FormTransaction";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { API_BASE_URL } from "../utils/constants";
 
 export default function TransactionDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
-  console.log(id);
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState(0);
   const [category, setCategory] = useState("");
-
   const [transactionType, setTransactionType] = useState("");
 
-  function handleChangeTitle(ev) {
-    setTitle(ev);
+  function handleChangeTitle(value) {
+    setTitle(value);
   }
 
-  function handleClickTransactionType(type) {
-    setTransactionType(type);
+  function handleClickTransactionType(value) {
+    setTransactionType(value);
   }
 
-  function handleChangeCategory(ev) {
-    setCategory(ev);
+  function handleChangeCategory(value) {
+    setCategory(value);
   }
 
-  function handleChangePrice(ev) {
-    setPrice(ev);
+  function handleChangePrice(value) {
+    setPrice(value);
   }
 
   async function fetchTransactionId() {
-    const transaction = await axios.get(
-      `http://localhost:3000/transactions/${id}`
-    );
+    try {
+      const response = await axios.get(`http://localhost:3000/transactions/${id}`);
+      const transaction = response.data;
 
-    setTitle(transaction.data.title);
-    setPrice(transaction.data.price);
-    setCategory(transaction.data.category);
-    setTransactionType(transaction.data.transactionType);
+      setTitle(transaction.title);
+      setPrice(transaction.price);
+      setCategory(transaction.category);
+      setTransactionType(transaction.transactionType);
+    } catch (error) {
+      console.error("Erro ao buscar transação:", error);
+    }
+  }
+
+  async function handleEditTransaction() {
+    const updatedTransaction = {
+      title,
+      price: Number(price),
+      category,
+      transactionType,
+      date: new Date().toLocaleDateString("pt-BR") // atualiza com a data atual
+    };
+
+    try {
+      await axios.put(`http://localhost:3000/transactions/${id}`, updatedTransaction);
+      navigate("/transactions");
+    } catch (error) {
+      console.error("Erro ao atualizar transação:", error);
+    }
   }
 
   useEffect(() => {
     fetchTransactionId();
   }, []);
 
-  console.log(id);
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <Header />
@@ -55,12 +72,12 @@ export default function TransactionDetails() {
           titleValue={title}
           priceValue={price}
           categoryValue={category}
+          transactionType={transactionType}
           handleChangeTitle={handleChangeTitle}
           handleChangePrice={handleChangePrice}
           handleChangeCategory={handleChangeCategory}
           handleClickTransactionType={handleClickTransactionType}
-          transactionType={transactionType}
-          handleNewTransaction={() => {}}
+          handleNewTransaction={handleEditTransaction}
         />
       </main>
     </div>
