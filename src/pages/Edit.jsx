@@ -1,148 +1,124 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 export default function Edit() {
-
   const navigate = useNavigate();
-  const params = useParams(); //Para utilizar o ID via React Router
-  const { id } = params;
+  const { id } = useParams();
+
   const [transactionDetails, setTransactionsDetails] = useState(null);
 
-  const [title, setTitle] = useState(transactionDetails?.title);
-  const [price, setPrice] = useState(transactionDetails?.price);
-  const [category, setCategory] = useState(transactionDetails?.category);
-  const [transactionType, setTransactionType] = useState(
-    transactionDetails?.transactionType
-  );
+  const [title, setTitle] = useState("");
+  const [price, setPrice] = useState("");
+  const [category, setCategory] = useState("");
+  const [transactionType, setTransactionType] = useState("");
 
-  function handleChangeTransactionType(ev) {
-    setTransactionType(ev);
-  }
+  // Atualiza os estados depois que os dados forem carregados
+  useEffect(() => {
+    async function getTransaction() {
+      const response = await axios.get(`http://localhost:3000/transactions/${id}`);
+      setTransactionsDetails(response.data);
+    }
 
-  function handleChangeTitle(ev) {
-    setTitle(ev);
-  }
+    getTransaction();
+  }, [id]);
 
-  function handleChangePrice(ev) {
-    setPrice(ev);
-  }
-
-  function handleChangeCategory(ev) {
-    setCategory(ev);
-  }
-
-  
+  // Quando os dados forem carregados, atualiza os estados
+  useEffect(() => {
+    if (transactionDetails) {
+      setTitle(transactionDetails.title);
+      setPrice(transactionDetails.price);
+      setCategory(transactionDetails.category);
+      setTransactionType(transactionDetails.transactionType);
+    }
+  }, [transactionDetails]);
 
   async function putTransaction(event) {
-    event.preventDefault;
-
+    event.preventDefault();
+  
     const updateEdit = {
       title: title,
       price: Number(price),
       category: category,
-      transactionType: transactionType
+      transactionType: transactionType,
+      date: new Date().toLocaleDateString("pt-BR") // 🕒 Adiciona a data atual no momento da edição
     };
-
+  
     await axios.put(`http://localhost:3000/transactions/${id}`, updateEdit);
-
+  
     navigate("/transactions");
   }
 
-  console.log(params);
-
-  console.log(setPrice);
-
-  async function getTransaction() {
-    const transactionsID = await axios.get(
-      `http://localhost:3000/transactions/${id}`
-    );
-
-    setTransactionsDetails(transactionsID.data);
-    console.log(transactionsID);
-  }
-
-  console.log(transactionDetails);
-
-  useEffect(() => {
-    getTransaction();
-  }, []);
-
   return (
-    //<h1>Detalhes do {id}</h1>
-
     <form className="flex flex-col gap-4 px-70 py-40" onSubmit={putTransaction}>
       <div className="flex flex-col">
-        <label htmlFor="Title">Title</label>
+        <label htmlFor="title">Title</label>
         <input
-          className="block border-1 rounded-md w-full min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
           type="text"
-          name="title"
           id="title"
-          placeholder="Digite o nome da title"
-          defaultValue={transactionDetails?.title}
-          onChange={(ev) => {
-            handleChangeTitle(ev.target.value);
-          }}
+          name="title"
+          value={title}
+          onChange={(ev) => setTitle(ev.target.value)}
           required
+          className="block border-1 rounded-md w-full py-1.5 pr-3 pl-1 text-base text-gray-900"
         />
       </div>
 
       <div>
         <label htmlFor="price">Preço</label>
         <input
-          onChange={(ev) => {
-            handleChangePrice(ev.target.value);
-          }}
-          className="block border-1 rounded-md w-full min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-          type="price"
-          name="price"
+          type="number"
           id="price"
-          defaultValue={transactionDetails?.price}
-          placeholder="Digite o price"
+          name="price"
+          value={price}
+          onChange={(ev) => setPrice(ev.target.value)}
           required
+          className="block border-1 rounded-md w-full py-1.5 pr-3 pl-1 text-base text-gray-900"
         />
       </div>
 
       <div>
         <label htmlFor="category">Categoria</label>
         <input
-          onChange={(ev) => {
-            handleChangeCategory(ev.target.value);
-          }}
-          className="block border-1 rounded-md w-full min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-          type="category"
-          name="category"
+          type="text"
           id="category"
-          placeholder="Digite a categoria"
-          defaultValue={transactionDetails?.category}
+          name="category"
+          value={category}
+          onChange={(ev) => setCategory(ev.target.value)}
           required
+          className="block border-1 rounded-md w-full py-1.5 pr-3 pl-1 text-base text-gray-900"
         />
       </div>
 
       <div>
         <label htmlFor="transactionType">Tipo de Transação</label>
         <input
-          onChange={(ev) => {
-            handleChangeTransactionType(ev.target.transactionType);
-          }}
-          className="block border-1 rounded-md w-full min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-          type="transactionType"
-          name="transactionType"
+          type="text"
           id="transactionType"
-          placeholder="Digite o tipo de transação"
-          defaultValue={transactionDetails?.transactionType}
+          name="transactionType"
+          value={transactionType}
+          onChange={(ev) => setTransactionType(ev.target.value)} // ✅ Corrigido aqui
           required
+          className="block border-1 rounded-md w-full py-1.5 pr-3 pl-1 text-base text-gray-900"
         />
       </div>
 
-      <div className="flex flex-row-reverse w-full">
+      <div className="flex flex-row-reverse w-full gap-3">
         <button
-          className="inline-block px-4 py-2 text-white duration-150 font-medium bg-indigo-600 rounded-lg hover:bg-indigo-500 active:bg-indigo-700 md:text-sm"
           type="submit"
+          className="px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-500"
         >
           Editar
         </button>
+
+        <button
+          type="reset"
+          className="px-4 py-2 text-whiteb bg-amber-300 rounded-lg hover:bg-amber-600"
+          onClick={()=>{navigate("/transactions");}}
+        >
+          Voltar
+        </button>
+
       </div>
     </form>
   );

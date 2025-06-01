@@ -115,7 +115,9 @@ function TransactionsPage() {
             <tbody className="divide-y divide-gray-100">
               {allTransactions.map((transactions, index) => {
                 return (
-                  <tr className="hover:bg-gray-50 bg-white" key={index}>
+                  <tr className="hover:bg-gray-50 bg-white" key={index} onClick={() => {
+                    editTransaction(transactions.id);
+                  }}>
                     <td className="px-6 py-4">{transactions.title}</td>
                     <td className="px-6 py-4 text-green-500 font-medium">
                       {transactions.price}
